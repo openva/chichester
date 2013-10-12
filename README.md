@@ -21,10 +21,10 @@ From this, get the ID, agency number, title, and whether it's been abolished.
 Use a regular expression a little like this:
 
 ```
-/000\+reg\+TOC([0-9]+)">(^<)<\/a><\/td><td>(^<)</td>/
+/000\+reg\+TOC([0-9]+)">(^<)<\/a><\/td><td>(^<)/
 ```
 
-Save whether it's been bolished:
+Then save whether it's been abolished, and break that out of the title:
 
 ```php
 if (stristr($title, '(ABOLISHED)') !== FALSE)
@@ -48,6 +48,23 @@ Example agency TOC entry:
 
 ```html
 <a href="/cgi-bin/legp504.exe?000+reg+18VAC85-20-10">Section 10</a></td><td>Definitions </td>
+```
+
+Use a regular expression a little like this:
+
+```
+/000\+reg\+(^")">(^>)<\/a><\/td><td>(^<)/
+```
+
+Then save whether it's been repealed, and break that out of the title:
+
+```php
+if (stristr($title, '[REPEALED]') !== FALSE)
+{
+	$repealed = TRUE;
+	$title = str_replace('[REPEALED]', '', $title);
+	$title = trim($title);
+}
 ```
 
 From this, get the complete section number, the described section number, the section title, and whether it's repealed.
