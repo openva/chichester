@@ -24,7 +24,7 @@ Use a regular expression a little like this:
 /000\+reg\+TOC([0-9]+)">(^<)<\/a><\/td><td>(^<)</td>/
 ```
 
-Abolished:
+Save whether it's been bolished:
 
 ```php
 if (stristr($title, '(ABOLISHED)') !== FALSE)
@@ -40,7 +40,7 @@ if (stristr($title, '(ABOLISHED)') !== FALSE)
 
 The URL is like this: `http://leg1.state.va.us/000/reg/TOC18085.HTM`.
 
-That format is `http://leg1.state.va.us/000/reg/TOC[ID].HTM`.
+That format is: `http://leg1.state.va.us/000/reg/TOC[id].HTM`.
 
 This is a list of chapters and those chapters' sections. We don't care about the chapters, but we do care about the sections.
 
@@ -55,12 +55,21 @@ From this, get the complete section number, the described section number, the se
 
 ### Load each section
 
-p.part		[unclear]
+Each URL is like this: `http://leg1.state.va.us/cgi-bin/legp504.exe?000+reg+18VAC85-20-310`.
 
-p.vacno		section number and title
+That format is: `http://leg1.state.va.us/cgi-bin/legp504.exe?000+reg+[section_number]`.
 
-p.sectind	the actual text of the regulation
+These are the fields that we want to extract:
 
-p.auth		Statutory Authority
-
-p.history	History
+<table>
+<thead>
+<tr><th>HTML Element</th><th>Description</th></tr>
+</thead>
+<tbody>
+<tr><td>`p.part`</td><td>[unclear]</td></tr>
+<tr><td>`p.vacno`</td><td>section number and title</td></tr>
+<tr><td>`p.sectind`</td><td>the actual text of the regulation</td></tr>
+<tr><td>`p.auth`</td><td>statutory authority</td></tr>
+<tr><td>`p.history`</td><td>history</td></tr>
+</tbody>
+</table>
