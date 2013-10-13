@@ -52,7 +52,7 @@ class Chichester
 		 */
 		if (class_exists('tidy', FALSE))
 		{
-
+			
 			$tidy = new tidy;
 			$tidy->parseString($this->html);
 			$tidy->cleanRepair();
@@ -112,17 +112,19 @@ class Chichester
 	/**
 	 * Fetch and structure the table of contents for the entire Administrative Code.
 	 *
-	 * @requires $this->html
-	 * @returns TRUE or FALSE
-	 * @sets 
+	 * @requires	nothing
+	 * @returns		TRUE or FALSE
+	 * @sets		$this->agencies
+	 * @todo		Intelligently title-case agency names.
 	 */
 	function parse_toc()
 	{
 		
 		/*
-		 * Fetch the table of contents.
+		 * The TOC's URL.
 		 */
 		$this->url = 'http://leg1.state.va.us/000/reg/TOC.HTM';
+		
 		try
 		{
 			$this->fetch_html();
@@ -165,10 +167,10 @@ class Chichester
 			/*
 			 * Save each field.
 			 */
-			$this->agencies->{$i}->toc_id = str_replace('http://leg1.state.va.us/000/reg/TOC',
+			$this->agencies->{$i}->toc_id = str_replace('/cgi-bin/legp504.exe?000+reg+TOC',
 				'', $agency->find('td', 0)->find('a', 0)->href);
 			$this->agencies->{$i}->number = trim(str_replace('Agency ', '', $agency->find('td', 0)->plaintext));
-			$this->agencies->{$i}->name = trim($agency->find('td', 1)->plaintext);
+			$this->agencies->{$i}->name = ucwords(strtolower(trim($agency->find('td', 1)->plaintext)));
 			
 			/*
 			 * Determine if this agency has been abolished. If it has been, strip that flag out of
@@ -177,7 +179,7 @@ class Chichester
 			if (stristr($this->agencies->{$i}->name, '(ABOLISHED)') !== FALSE)
 			{
 				$this->agencies->{$i}->abolished = TRUE;
-				$this->agencies->{$i}->name = str_replace('(ABOLISHED)', '', $this->agencies->{$i}->name);
+				$this->agencies->{$i}->name = str_ireplace('(ABOLISHED)', '', $this->agencies->{$i}->name);
 				$this->agencies->{$i}->name = trim($this->agencies->{$i}->name);
 			}
 			else
@@ -196,12 +198,28 @@ class Chichester
 	/**
 	 * Fetch and structure the table of contents for a single agency.
 	 * 
-	 * @requires	$this->html
+	 * @requires	$this->agency_id
 	 * @returns		TRUE or FALSE
-	 * @sets		TBD
+	 * @sets		
 	 */
 	function parse_agency()
 	{
+		
+		/*
+		 * We need the agency ID, as found in the URL.
+		 */
+		if (!isset($this->agency_id))
+		{
+			throw new Exception('No agency ID has been provided');
+			return FALSE;
+		}
+		
+		/*
+		 * Get the HTML of the page.
+		 */
+		$this->url = 'http://leg1.state.va.us/000/reg/TOC' . $this->agency_id;
+		$this->html = $this->fetch_html();
+		die($this->html);
 		
 		/*
 		 * Convert the HTML to an object.
@@ -215,7 +233,6 @@ class Chichester
 			 throw new Exception($e->getMessage());
 			 return FALSE;
 		}
-		
 		
 		/*
 		 * Fetch each table row.
