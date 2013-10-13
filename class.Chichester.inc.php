@@ -218,9 +218,8 @@ class Chichester
 		/*
 		 * Get the HTML of the page.
 		 */
-		$this->url = 'http://leg1.state.va.us/000/reg/TOC' . $this->agency_id;
-		$this->html = $this->fetch_html();
-		die($this->html);
+		$this->url = 'http://leg1.state.va.us/000/reg/TOC' . $this->agency_id . '.HTM';
+		$this->fetch_html();
 		
 		/*
 		 * Convert the HTML to an object.
