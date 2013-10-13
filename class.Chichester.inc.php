@@ -246,7 +246,7 @@ class Chichester
 			 * determine this, and see if it's a section, a collection of forms, or a "DIBR"—a
 			 * list of documents included by reference.
 			 */
-			$td_1 = $report->find('td', 0)->plaintext;
+			$td_1 = $section->find('td', 0)->plaintext;
 			
 			/*
 			 *	Is this a section, a collection of forms, or documents included by reference? If
@@ -277,7 +277,7 @@ class Chichester
 			/*
 			 * Save the official URL for this section.
 			 */
-			$this->sections->{$i}->official_url = $report->find('td', 0)->find('a', 0)->href;
+			$this->sections->{$i}->official_url = $section->find('td', 0)->find('a', 0)->href;
 			
 			/*
 			 * Save the section number (e.g., "2VAC5-585-2500"). We extract this from the URL.
@@ -288,7 +288,7 @@ class Chichester
 			/*
 			 * Save the section catch line.
 			 */
-			$this->sections->{$i}->catch_line = trim($report->find('td', 1)->plaintext);
+			$this->sections->{$i}->catch_line = trim($section->find('td', 1)->plaintext);
 			
 			/*
 			 * If the catch line is "[Repealed]" then we actually have no catch line, but instead
