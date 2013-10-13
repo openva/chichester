@@ -16,14 +16,34 @@ include('class.simple_html_dom.inc.php');
  */
 include('class.Chichester.inc.php');
 
-// fetch the TOC
-// parse the TOC
+/*
+ * Include the Subsection Identifier library.
+ */
+include('class.SubsectionIdentifier.inc.php');
 
-// iterate through the TOC
-	// fetch the agency
-	// parse the agency
-	// store the agency
-	// append the agency to the TOC object
+// Here's a regular expression to identify citations.
+//([0-9]{1,2})VAC([0-9]{1,3})-([0-9]{1,3})-([0-9]{1,4})/
+
+/*
+ * Creat a new instance of our parser.
+ */
+$chichester = new Chichester();
+
+/*
+ * Fetch and save the table of contents page.
+ */
+$chichester->parse_toc();
+
+echo '<pre>' . print_r($chichester->agencies) . '</pre>';
+
+die();
+
+foreach ($chichester->agencies as $agency)
+{
+
+	$chichester;
+
+}
 
 // store the now-complete TOC as a JSON file
 
