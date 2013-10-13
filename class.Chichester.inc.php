@@ -157,9 +157,10 @@ class Chichester
 		{
 			
 			/*
-			 * If this isn't an agency listing, then skip it.
+			 * If this isn't an agency listing, then skip it. (We check the length because otherwise
+			 * we get an initial match against the entire page content.)
 			 */
-			if (stristr($agency->find('td', 0)->plaintext, 'Agency') === FALSE)
+			if ( strlen($agency->find('td', 0)->plaintext) > 100 || (stristr($agency->find('td', 0)->plaintext, 'Agency') === FALSE) )
 			{
 				continue;
 			}
