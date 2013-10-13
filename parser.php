@@ -34,14 +34,23 @@ $chichester = new Chichester();
  */
 $chichester->parse_toc();
 
-echo '<pre>' . print_r($chichester->agencies) . '</pre>';
-
-die();
-
 foreach ($chichester->agencies as $agency)
 {
-
-	$chichester;
+	
+	$chichester->agency_id = $agency->toc_id;
+	
+	try
+	{
+		$chichester->parse_agency();
+	}
+	catch (Exception $e)
+	{
+		 die('Fatal error: ' . $e->getMessage());
+	}
+	
+	echo '<pre>' . print_r($chichester->sections) . '</pre>';
+	
+	die(PHP_EOL . 'stopping prematurely' . PHP_EOL);
 
 }
 
