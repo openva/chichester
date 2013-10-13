@@ -277,12 +277,13 @@ class Chichester
 			/*
 			 * Save the official URL for this section.
 			 */
-			$this->sections->{$i}->official_url = $section->find('td', 0)->find('a', 0)->href;
+			$this->sections->{$i}->official_url = 'http://leg1.state.va.us/'
+				. $section->find('td', 0)->find('a', 0)->href;
 			
 			/*
 			 * Save the section number (e.g., "2VAC5-585-2500"). We extract this from the URL.
 			 */
-			$this->sections->{$i}->section_number = str_replace('http://leg1.state.va.us/cgi-bin/legp504.exe?000+reg+',
+			$this->sections->{$i}->section_number = str_replace('/cgi-bin/legp504.exe?000+reg+',
 				'', $this->sections->{$i}->official_url);
 			
 			/*

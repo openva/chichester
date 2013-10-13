@@ -49,8 +49,6 @@ foreach ($chichester->agencies as $agency)
 	}
 	
 	echo '<pre>' . print_r($chichester->sections) . '</pre>';
-	
-	die(PHP_EOL . 'stopping prematurely' . PHP_EOL);
 
 }
 
