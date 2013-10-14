@@ -32,6 +32,7 @@ class Chichester
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, TRUE);
 		curl_setopt($ch, CURLOPT_URL, $this->url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
 		$allowed_protocols = CURLPROTO_HTTP | CURLPROTO_HTTPS;
 		curl_setopt($ch, CURLOPT_PROTOCOLS, $allowed_protocols);
 		curl_setopt($ch, CURLOPT_REDIR_PROTOCOLS, $allowed_protocols & ~(CURLPROTO_FILE | CURLPROTO_SCP));
@@ -218,7 +219,7 @@ class Chichester
 		/*
 		 * Get the HTML of the page.
 		 */
-		$this->url = 'http://leg1.state.va.us/000/reg/TOC' . $this->agency_id . '.HTM';
+		$this->url = 'http://leg1.state.va.us/cgi-bin/legp504.exe?000+reg+TOC' . $this->agency_id;
 		$this->fetch_html();
 		
 		/*
@@ -277,13 +278,13 @@ class Chichester
 			/*
 			 * Save the official URL for this section.
 			 */
-			$this->sections->{$i}->official_url = 'http://leg1.state.va.us/'
+			$this->sections->{$i}->official_url = 'http://leg1.state.va.us'
 				. $section->find('td', 0)->find('a', 0)->href;
 			
 			/*
 			 * Save the section number (e.g., "2VAC5-585-2500"). We extract this from the URL.
 			 */
-			$this->sections->{$i}->section_number = str_replace('/cgi-bin/legp504.exe?000+reg+',
+			$this->sections->{$i}->section_number = str_replace('http://leg1.state.va.us/cgi-bin/legp504.exe?000+reg+',
 				'', $this->sections->{$i}->official_url);
 			
 			/*
