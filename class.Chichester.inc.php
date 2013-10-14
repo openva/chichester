@@ -296,14 +296,14 @@ class Chichester
 			 * If the catch line is "[Repealed]" then we actually have no catch line, but instead
 			 * a nameless, repealed section.
 			 */
-			if (stristr($this->sections->{$i}->catch_line, '[Removed]') !== FALSE)
+			if (stristr($this->sections->{$i}->catch_line, '[Repealed]') !== FALSE)
 			{
 				unset($this->sections->{$i}->catch_line);
-				$this->sections->{$i}->removed = TRUE;
+				$this->sections->{$i}->repealed = TRUE;
 			}
 			else
 			{
-				$this->sections->{$i}->removed = FALSE;
+				$this->sections->{$i}->repealed = FALSE;
 			}
 			
 		}
