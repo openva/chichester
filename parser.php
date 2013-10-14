@@ -45,10 +45,10 @@ foreach ($chichester->agencies as $agency)
 	}
 	catch (Exception $e)
 	{
-		 die('Fatal error: ' . $e->getMessage());
+		 echo ('Fatal error for agency ' . $chichester->agency_id . ': ' . $e->getMessage());
 	}
 	
-	echo '<pre>' . print_r($chichester->sections) . '</pre>';
+	//echo '<pre>' . print_r($chichester->sections) . '</pre>';
 
 }
 
