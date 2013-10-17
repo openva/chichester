@@ -377,6 +377,16 @@ class Chichester
 			$this->section->section_number = substr($tmp, 0, $pos);
 			$this->section->catch_line = html_entity_decode(substr($tmp, ($pos+2)));
 		}
+		
+		/*
+		 * But if the section number and catch line aren't found in the HTML, then this is a form
+		 * list or a DIBR list. Get the pseudo-section-number from the URL.
+		 */
+		else
+		{
+			$components = explode('+', $this->url);
+			$this->section->section_number = $components[2];
+		}
 		 * Find all "parts." I have no idea what this means.
 		 */
 		$this->dom->find('p.part');
