@@ -262,15 +262,15 @@ class Chichester
 			 *	Is this a section, a collection of forms, or documents included by reference? If
 			 * it's none of those things, then skip it.
 			 */
-			if (stristr($td_1, 'section') === FALSE)
+			if (stristr($td_1, 'section') !== FALSE)
 			{
 				$entry_type = 'section';
 			}
-			elseif (stristr($td_1, 'forms') === FALSE)
+			elseif (stristr($td_1, 'forms') !== FALSE)
 			{
 				$entry_type = 'forms';
 			}
-			elseif (stristr($td_1, 'dibr') === FALSE)
+			elseif (stristr($td_1, 'dibr') !== FALSE)
 			{
 				$entry_type = 'dibr';
 			}
