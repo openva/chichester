@@ -41,6 +41,8 @@ file_put_contents('output/agencies.json', json_encode($chichester->agencies));
 foreach ($chichester->agencies as $agency)
 {
 	
+	echo $agency->name . PHP_EOL;
+	
 	$chichester->agency_id = $agency->toc_id;
 	
 	/*
@@ -55,7 +57,6 @@ foreach ($chichester->agencies as $agency)
 		 echo ('Fatal error for agency ' . $chichester->agency_id . ': ' . $e->getMessage());
 	}
 	
-	//echo '<pre>' . print_r($chichester->sections) . '</pre>';
 	file_put_contents('output/agency-' . $agency->toc_id . '.json', json_encode($chichester->sections));
 	/*
 	 * Now iterate through each section in this agency.
@@ -63,6 +64,7 @@ foreach ($chichester->agencies as $agency)
 		// THIS IS A MISTAKE. Ultimately, we even want to save repealed and remove sections.
 			file_put_contents('output/sections/' . $chichester->section->section_number . '.json',
 				json_encode($chichester->section));
+			echo '* ' . $chichester->section->section_number . PHP_EOL;
 
 }
 
