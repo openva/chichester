@@ -387,6 +387,35 @@ class Chichester
 			$components = explode('+', $this->url);
 			$this->section->section_number = $components[2];
 		}
+		
+		/*
+		 * Break the section number into its constitutents, to extract its ancestry (title, agency,
+		 * and chapter).
+		 */
+		preg_match('/([0-9]{1,2})VAC([0-9]{1,3})-([0-9]{1,3})-([0-9]{1,4})/', $this->section->section_number, $parts);
+		
+		/*
+		 * Produce an object containing all of our structural data.
+		 */
+		$structure = array(
+			1 => 'title',
+			2 => 'agency',
+			3 => 'chapter',
+			4 => 'section');
+		$this->section->structure = new stdClass();
+		$i=1;
+		foreach ($structure as $number => $label)
+		{
+			$tmp = new stdClass();
+			$tmp->label = $label;
+			$tmp->identifier = $parts[$number];
+			$tmp->TO_BE_NAMED = 'TO_BE_DEFINED';
+			$tmp->level = $parts[$i];
+			$this->section->structure->unit[] = $tmp;
+			$i++;
+		}
+
+		/*
 		 * Find all "parts." I have no idea what this means.
 		 */
 		$this->dom->find('p.part');
