@@ -241,6 +241,15 @@ class Chichester
 		$i=0;
 		foreach ($this->dom->find('tr') as $section)
 		{
+		
+			/*
+			 * If this cell's contents are suspiciously long, then we're looking at a table row used
+			 * for page layout. Skip it.
+			 */
+			if (strlen($section->find('td', 0)->innertext) > 100 )
+			{
+				continue;
+			}
 			
 			/*
 			 * See if this is a table row that we actually want. We look at the first cell to
