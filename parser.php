@@ -33,6 +33,7 @@ $chichester = new Chichester();
  * Fetch and save the table of contents page.
  */
 $chichester->parse_toc();
+file_put_contents('output/agencies.json', json_encode($chichester->agencies));
 
 foreach ($chichester->agencies as $agency)
 {
@@ -49,6 +50,9 @@ foreach ($chichester->agencies as $agency)
 	}
 	
 	//echo '<pre>' . print_r($chichester->sections) . '</pre>';
+	file_put_contents('output/agency-' . $agency->toc_id . '.json', json_encode($chichester->sections));
+			file_put_contents('output/sections/' . $chichester->section->section_number . '.json',
+				json_encode($chichester->section));
 
 }
 
