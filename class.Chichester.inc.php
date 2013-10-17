@@ -400,6 +400,11 @@ class Chichester
 		$structurer->text = $this->section->text;
 		$structurer->parse();
 		$this->section->text = $structurer->structured;
+		$this->section->text = trim($this->section->text);
+		if (empty($this->section->text))
+		{
+			unset($this->section->text);
+		}
 		
 		/*
 		 * Save the history of the establishment of and modifications to this regulation.
@@ -418,6 +423,14 @@ class Chichester
 			$this->section->history .= $history;
 		}
 		
+		/*
+		 * If we didn't get any history data, eliminate the variable.
+		 */
+		$this->section->history = trim($this->section->history);
+		if (empty($this->section->history))
+		{
+			unset($this->section->history);
+		}
 		
 		return TRUE;
 		
