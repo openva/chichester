@@ -397,6 +397,11 @@ class Chichester
 		}
 		
 		/*
+		 * Convert HTML entities to Unicode.
+		 */
+		$this->section->authority = html_entity_decode($this->section->authority);
+		
+		/*
 		 * Save the actual text of this regulation. We do this by getting a list of all paragraphs
 		 * with a class that starts with "sect," since we know that sections of text can have the
 		 * class "sectind" or "sectbi", which means it's possible that othe classes are lurking out
@@ -424,6 +429,11 @@ class Chichester
 		{
 		
 			/*
+			 * Convert HTML entities to Unicode.
+			 */
+			$this->section->text = html_entity_decode($this->section->text);
+		
+			/*
 			 * Take our unstructured text and give it structure.
 			 */
 			$structurer = new SubsectionIdentifier();
@@ -448,7 +458,13 @@ class Chichester
 				continue;
 			}
 			$this->section->history .= $history->innertext . "\n\n";
+			
 		}
+		
+		/*
+		 * Convert HTML entities to Unicode.
+		 */
+		$this->section->history = html_entity_decode($this->section->history);
 		
 		/*
 		 * If we didn't get any history data, eliminate the variable.
