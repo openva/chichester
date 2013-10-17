@@ -367,11 +367,16 @@ class Chichester
 		 */
 		$tmp = $this->dom->find('p.vacno', 0);
 		$tmp = $tmp->plaintext;
-		$pos = strpos($tmp, '. ');
-		$this->section->section_number = substr($tmp, 0, $pos);
-		$this->section->catch_line = substr($tmp, $pos);
 		
 		/*
+		 * If the section number and catch line are found in the HTML, extract it.
+		 */
+		if (!empty($tmp))
+		{
+			$pos = strpos($tmp, '. ');
+			$this->section->section_number = substr($tmp, 0, $pos);
+			$this->section->catch_line = html_entity_decode(substr($tmp, ($pos+2)));
+		}
 		 * Find all "parts." I have no idea what this means.
 		 */
 		$this->dom->find('p.part');
