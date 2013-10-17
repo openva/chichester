@@ -302,17 +302,27 @@ class Chichester
 			$this->sections->{$i}->catch_line = trim($section->find('td', 1)->plaintext);
 			
 			/*
-			 * If the catch line is "[Repealed]" then we actually have no catch line, but instead
-			 * a nameless, repealed section.
+			 * If the catch line contains "[Repealed]" then strip that text out of the catch line
+			 * and mark it as repealed.
 			 */
 			if (stristr($this->sections->{$i}->catch_line, '[Repealed]') !== FALSE)
 			{
-				unset($this->sections->{$i}->catch_line);
+				$this->sections->{$i}->catch_line = trim(str_replace('[Repealed]', '', $this->sections->{$i}->catch_line));
 				$this->sections->{$i}->repealed = TRUE;
+				$this->sections->{$i}->removed = FALSE;
+			}
+			
+			 */
+			elseif ($this->sections->{$i}->catch_line == '[Removed]')
+			{
+				unset($this->sections->{$i}->catch_line);
+				$this->sections->{$i}->removed = TRUE;
+				$this->sections->{$i}->repealed = FALSE;
 			}
 			else
 			{
 				$this->sections->{$i}->repealed = FALSE;
+				$this->sections->{$i}->removed = FALSE;
 			}
 			
 			$i++;
