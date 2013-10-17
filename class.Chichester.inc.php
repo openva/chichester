@@ -394,16 +394,28 @@ class Chichester
 		}
 		
 		/*
-		 * Take our unstructured text and give it structure.
+		 * If we didn't get any text, eliminate the variable.
 		 */
-		$structurer = new SubsectionIdentifier();
-		$structurer->text = $this->section->text;
-		$structurer->parse();
-		$this->section->text = $structurer->structured;
 		$this->section->text = trim($this->section->text);
 		if (empty($this->section->text))
 		{
 			unset($this->section->text);
+		}
+		
+		/*
+		 * If we got any text.
+		 */
+		if (!empty($this->section->text))
+		{
+		
+			/*
+			 * Take our unstructured text and give it structure.
+			 */
+			$structurer = new SubsectionIdentifier();
+			$structurer->text = $this->section->text;
+			$structurer->parse();
+			$this->section->text = $structurer->structured;
+			
 		}
 		
 		/*
