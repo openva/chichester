@@ -315,6 +315,8 @@ class Chichester
 				$this->sections->{$i}->repealed = FALSE;
 			}
 			
+			$i++;
+			
 		}
 		
 		return TRUE;
