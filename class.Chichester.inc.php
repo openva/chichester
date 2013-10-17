@@ -312,6 +312,8 @@ class Chichester
 				$this->sections->{$i}->removed = FALSE;
 			}
 			
+			/*
+			 * And if the catch line 
 			 */
 			elseif ($this->sections->{$i}->catch_line == '[Removed]')
 			{
@@ -358,37 +360,39 @@ class Chichester
 		}
 		
 		/*
-		 * 
-		 */
-		$this->dom->find('p.part');
-		
-		/*
 		 * Save the section number and the catch line.
 		 *
 		 * For example:
 		 * <p class=vacno>16VAC30-12-40. Information to be sent to persons on the list.</p>
 		 */
-		$tmp = $this->dom->find('p.vacno');
+		$tmp = $this->dom->find('p.vacno', 0);
+		$tmp = $tmp->plaintext;
 		$pos = strpos($tmp, '. ');
 		$this->section->section_number = substr($tmp, 0, $pos);
 		$this->section->catch_line = substr($tmp, $pos);
+		
+		/*
+		 * Find all "parts." I have no idea what this means.
+		 */
+		$this->dom->find('p.part');
 		
 		/*
 		 * Save the statutory authority under which this regulation was established. This may be
 		 * multiple paragraphs, so we build it up with a loop.
 		 */
 		$this->section->authority = '';
-		foreach ($this->dom->find('p.auth')->innertext as $auth)
+		foreach ($this->dom->find('p.auth') as $auth)
 		{
 			
 			/*
 			 * Skip the section header (which is just a P tag).
 			 */
-			if ($auth == 'Statutory Authority')
+			if ($auth->plaintext == 'Statutory Authority')
 			{
 				continue;
 			}
-			$this->section->authority .= $auth;
+			
+			$this->section->authority .= $auth->plaintext;
 			
 		}
 		
@@ -399,10 +403,9 @@ class Chichester
 		 * there somewhere.
 		 */
 		$this->section->text = '';
-		foreach ($this->dom->find('p[class^=sect]')->innertext as $text)
+		foreach ($this->dom->find('p[class^=sect]') as $text)
 		{
-			
-			$this->section->text .= $text;
+			$this->section->text .= $text->innertext . "\n\n";
 		}
 		
 		/*
@@ -434,17 +437,17 @@ class Chichester
 		 * Save the history of the establishment of and modifications to this regulation.
 		 */ 
 		$this->section->history = '';
-		foreach ($this->dom->find('p[class^=sect]')->innertext as $history)
+		foreach ($this->dom->find('p[class^=history]') as $history)
 		{
 			
 			/*
 			 * Skip the section header (which is just a P tag).
 			 */
-			if ($history == 'Historical Notes')
+			if ($history->innertext == 'Historical Notes')
 			{
 				continue;
 			}
-			$this->section->history .= $history;
+			$this->section->history .= $history->innertext . "\n\n";
 		}
 		
 		/*
