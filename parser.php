@@ -58,13 +58,27 @@ foreach ($chichester->agencies as $agency)
 	}
 	
 	file_put_contents('output/agency-' . $agency->toc_id . '.json', json_encode($chichester->sections));
+	
 	/*
 	 * Now iterate through each section in this agency.
 	 */
+	foreach ($chichester->sections as $section)
+	{
+		
 		// THIS IS A MISTAKE. Ultimately, we even want to save repealed and remove sections.
+		if ( ($section->repealed === FALSE) && ($section->removed === FALSE) )
+		{
+			$chichester->url = $section->official_url;
+			$chichester->fetch_html();
+			$chichester->parse_section();
+			
 			file_put_contents('output/sections/' . $chichester->section->section_number . '.json',
 				json_encode($chichester->section));
 			echo '* ' . $chichester->section->section_number . PHP_EOL;
+			
+		}
+	
+	}
 
 }
 
