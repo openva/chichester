@@ -21,11 +21,9 @@ include('class.Chichester.inc.php');
  */
 include('class.SubsectionIdentifier.inc.php');
 
-// Here's a regular expression to identify citations.
-//([0-9]{1,2})VAC([0-9]{1,3})-([0-9]{1,3})-([0-9]{1,4})/
 
 /*
- * Creat a new instance of our parser.
+ * Create a new instance of our parser.
  */
 $chichester = new Chichester();
 
@@ -56,7 +54,7 @@ foreach ($chichester->agencies as $agency)
 	{
 		 echo ('Fatal error for agency ' . $chichester->agency_id . ': ' . $e->getMessage());
 	}
-	
+// We're getting duplicate agency records. For instance, the ABC (agency 
 	file_put_contents('output/agency-' . $agency->toc_id . '.json', json_encode($chichester->sections));
 	
 	/*
@@ -68,6 +66,7 @@ foreach ($chichester->agencies as $agency)
 		// THIS IS A MISTAKE. Ultimately, we even want to save repealed and remove sections.
 		if ( ($section->repealed === FALSE) && ($section->removed === FALSE) )
 		{
+		
 			$chichester->url = $section->official_url;
 			$chichester->fetch_html();
 			$chichester->parse_section();
