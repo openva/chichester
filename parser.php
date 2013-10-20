@@ -21,6 +21,14 @@ include('class.Chichester.inc.php');
  */
 include('class.SubsectionIdentifier.inc.php');
 
+/*
+ * Get a list of every section that we already have a copy of.
+ */
+$existing_sections = scandir('output/sections/');
+foreach ($existing_sections as &$section)
+{
+	$section = str_replace('.json', '', $section);
+}
 
 /*
  * Create a new instance of our parser.
@@ -62,6 +70,17 @@ foreach ($chichester->agencies as $agency)
 	 */
 	foreach ($chichester->sections as $section)
 	{
+		
+		/*
+		 * If we already have a copy of this section, skip it.
+		 */
+		$components = explode('+', $section->official_url);
+		$section_number = $components[2];
+		if (in_array($section_number, $existing_sections))
+		{
+			echo 'Skipping ' . $section_number . PHP_EOL;
+			continue;
+		}
 		
 		// THIS IS A MISTAKE. Ultimately, we even want to save repealed and remove sections.
 		if ( ($section->repealed === FALSE) && ($section->removed === FALSE) )
