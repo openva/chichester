@@ -77,6 +77,12 @@ foreach ($chichester->agencies as $agency)
 			echo '* ' . $chichester->section->section_number . PHP_EOL;
 			
 		}
+		
+		/*
+		 * Sleep for .51 seconds. If we don't do this, we'll be locked out of leg1.state.va.us,
+		 * which limits requests to 30 per 60 seconds.
+		 */
+		usleep(510000);
 	
 	}
 

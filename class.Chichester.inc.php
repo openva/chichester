@@ -30,6 +30,7 @@ class Chichester
 		 */
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, TRUE);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 5000);
 		curl_setopt($ch, CURLOPT_URL, $this->url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
@@ -37,16 +38,17 @@ class Chichester
 		curl_setopt($ch, CURLOPT_PROTOCOLS, $allowed_protocols);
 		curl_setopt($ch, CURLOPT_REDIR_PROTOCOLS, $allowed_protocols & ~(CURLPROTO_FILE | CURLPROTO_SCP));
 		$this->html = curl_exec($ch);
-		curl_close($ch);
 		
 		/*
 		 * If our query failed, then we can't continue.
 		 */
 		if ($this->html === FALSE)
 		{
-			throw new Exception('cURL could not retrieve content for ' . $this->url . ', with the
-				following error: ' . $curl_error($ch));
+			throw new Exception('cURL could not retrieve content for ' . $this->url . ', with the '
+				.'following error: ' . curl_error($ch));
 		}
+		
+		curl_close($ch);
 		
 		/*
 		 * This HTML is invalid. Clean it up with HTML Tidy.
