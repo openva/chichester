@@ -97,7 +97,15 @@ class Chichester
 		/*
 		 * Render this as an object with PHP Simple HTML DOM Parser.
 		 */
-		$this->dom = str_get_html($this->html);
+		try
+		{
+			$this->dom = str_get_html($this->html);
+		}
+		catch (Exception $e)
+		{
+			 throw new Exception($e->getMessage());
+			 return FALSE;
+		}
 		
 		/*
 		 * If this can't be rendered, then there's a serious HTML error.
