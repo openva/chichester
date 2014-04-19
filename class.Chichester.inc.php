@@ -132,77 +132,78 @@ class Chichester
 	{
 		
 		/*
-		 * The TOC's URL.
+		 * The base URL for each title's table of contents.
 		 */
-		$this->url = 'http://leg1.state.va.us/000/reg/TOC.HTM';
-		
-		try
-		{
-			$this->fetch_html();
-		}
-		catch (Exception $e)
-		{
-			 throw new Exception($e->getMessage());
-			 return FALSE;
-		}
+		$this->master_url = 'http://law.lis.virginia.gov/admincode/title';
 		
 		/*
-		 * Convert the HTML to an object.
+		 * There are 24 Titles. Iterate through them.
 		 */
-		try
+		for ($title=1; $title<=24; $title++)
 		{
-			$this->html_to_object();
-		}
-		catch (Exception $e)
-		{
-			 throw new Exception($e->getMessage());
-			 return FALSE;
-		}
+			
+			/*
+			 * The URL is the master URL, plus the title number.
+			 */
+			$this->url = $this->master_url .= $title;
+			
+			try
+			{
+				$this->fetch_html();
+			}
+			catch (Exception $e)
+			{
+				 throw new Exception($e->getMessage());
+				 return FALSE;
+			}
 		
-		/*
-		 * Iterate through the table rows -- each row is a single TOC entry. (A bunch of table rows
-		 * are noise, but we can avoid those easily.)
-		 */
-		$i=0;
-		foreach ($this->dom->find('tr') as $agency)
-		{
-			
 			/*
-			 * If this isn't an agency listing, then skip it. (We check the length because otherwise
-			 * we get an initial match against the entire page content.)
+			 * Convert the HTML to an object.
 			 */
-			if ( strlen($agency->find('td', 0)->plaintext) > 100 || (stristr($agency->find('td', 0)->plaintext, 'Agency') === FALSE) )
+			try
 			{
-				continue;
+				$this->html_to_object();
 			}
-			
-			/*
-			 * Save each field.
-			 */
-			$this->agencies->{$i}->toc_id = str_replace('/cgi-bin/legp504.exe?000+reg+TOC',
-				'', $agency->find('td', 0)->find('a', 0)->href);
-			$this->agencies->{$i}->number = trim(str_replace('Agency ', '', $agency->find('td', 0)->plaintext));
-			$this->agencies->{$i}->name = ucwords(strtolower(trim($agency->find('td', 1)->plaintext)));
-			
-			/*
-			 * Determine if this agency has been abolished. If it has been, strip that flag out of
-			 * the agency title, with which it's comingled. Save that flag as its own variable.
-			 */
-			if (stristr($this->agencies->{$i}->name, '(ABOLISHED)') !== FALSE)
+			catch (Exception $e)
 			{
-				$this->agencies->{$i}->abolished = TRUE;
-				$this->agencies->{$i}->name = str_ireplace('(ABOLISHED)', '', $this->agencies->{$i}->name);
-				$this->agencies->{$i}->name = trim($this->agencies->{$i}->name);
+				 throw new Exception($e->getMessage());
+				 return FALSE;
 			}
-			else
-			{
-				$this->agencies->{$i}->abolished = FALSE;
-			}
-			
-			$i++;
-			
-		}
 		
+			/*
+			 * Iterate through the definitions. Each dt/dd pair is an agency.
+			 */
+			$i=0;
+			foreach ($this->dom->find('dt') as $agency)
+			{
+			
+				/*
+				 * Save each field.
+				 */
+				$this->agencies->{$i}->toc_id = str_pad($title, 2, '0', STR_PAD_LEFT)
+					. str_pad(str_replace('Agency ', '', $agency->plaintext), 2, '0', STR_PAD_LEFT);
+				$this->agencies->{$i}->number = trim(str_replace('Agency ', '', $agency->plaintext));
+				$this->agencies->{$i}->name = trim($agency->next_sibling);
+			
+				/*
+				 * Determine if this agency has been abolished. If it has been, strip that flag out of
+				 * the agency title, with which it's comingled. Save that flag as its own variable.
+				 */
+				if (stristr($this->agencies->{$i}->name, '(Abolished)') !== FALSE)
+				{
+					$this->agencies->{$i}->abolished = TRUE;
+					$this->agencies->{$i}->name = trim(str_ireplace('(Abolished)', '', $this->agencies->{$i}->name));
+				}
+				else
+				{
+					$this->a
+				
+				$i++;
+			
+			}
+
+		}
+				
 		return TRUE;
 		
 	}
